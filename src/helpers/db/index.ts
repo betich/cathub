@@ -1,7 +1,7 @@
 import admin from "firebase-admin";
 import cert from "./certificate";
 
-export const initDB = () => {
+const initDB = () => {
 	try {
 		return admin.firestore();
 	} catch {
@@ -11,3 +11,5 @@ export const initDB = () => {
 		return admin.firestore();
 	}
 };
+
+export default initDB;

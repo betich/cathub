@@ -5,7 +5,7 @@
         "@styles/*": ["src/styles/*"],
         "@components/*": ["src/components/*"],
         "@pages/*": ["src/pages/*"],
-        "@helpers/*": ["src/helpers/*"]
+        "@helpers/*": ["src/helpers/*"],
       },
       "lib": [
         "es2020", "dom"

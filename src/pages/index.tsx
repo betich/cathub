@@ -12,8 +12,8 @@ const Home: FunctionComponent = () => {
 			</Head>
 			<Heading>CatHub</Heading>
 			<LinkList>
-				<LinkButton href="/p">View Posts</LinkButton>
 				<LinkButton href="/p/create">Create a Post</LinkButton>
+				<LinkButton href="/p">View Posts</LinkButton>
 				<LinkButton href="/">Cat Battles!</LinkButton>
 			</LinkList>
 		</>
