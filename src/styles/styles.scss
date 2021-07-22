@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    font-size: 16px;
+}
+
+body {
+    padding: 0 50px;
+}
+
+@media screen and (max-width: 480px) {
+    body {
+        padding: 0 16px;
+    }
+}
+
+@layer base {
+    .heading-text {
+        @apply sm:text-5xl text-4xl font-bold text-purple-800;
+    }
+
+    .subheading-text {
+        @apply text-2xl font-semibold text-gray-700;
+    }
+
+    .label-text {
+        @apply text-base font-bold text-gray-700 mr-3;
+    }
+
+    .button-block {
+        @apply h-10 px-3 text-lg text-gray-100 transition-colors cursor-pointer duration-150 bg-purple-700 rounded-lg focus:shadow hover:bg-purple-900;
+    }
+
+    .tag-button {
+        @extend .button-block;
+        @apply border-purple-700 border ml-2 mb-2 bg-white text-purple-700 hover:bg-purple-700 hover:text-gray-100 active:bg-purple-900;
+
+        &.-checked {
+            @apply bg-purple-700 text-gray-100 hover:bg-purple-900 hover:text-gray-200;
+        }
+    }
+
+    .link-button {
+        @apply shadow-md cursor-pointer px-8 py-4 w-60 rounded-lg text-center text-xl flex justify-center items-center mb-10 transition-all duration-300 hover:bg-gray-100 border-gray-200 border;
+        > .link {
+            @apply text-purple-700 hover:text-purple-900 transition-all duration-300;
+        }
+    }
+}
