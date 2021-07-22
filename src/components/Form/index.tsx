@@ -1,4 +1,4 @@
-import { FunctionComponent, MouseEvent, FormEvent, useState, useEffect, useLayoutEffect, useRef, KeyboardEvent } from "react";
+import { FunctionComponent, MouseEvent, FormEvent, useState, useEffect, useRef, KeyboardEvent } from "react";
 import { TagButtonElement, InputElement, TagsElement, FormPost } from "./types";
 
 export const PostForm: FunctionComponent<FormPost> = ({ children, onsubmit }) => {
@@ -14,7 +14,7 @@ export const PostForm: FunctionComponent<FormPost> = ({ children, onsubmit }) =>
 export const PostTitle: FunctionComponent<InputElement> = ({ onchange, value, placeholder, required }) => {
 	const inputElement = useRef<HTMLInputElement>(null);
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		if (inputElement.current) {
 		  inputElement.current.focus(); // autofocus
 		}
