@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
 import initDB from "@helpers/db";
+import slugify from "slugify";
 
 const handler = nc<NextApiRequest, NextApiResponse>();
 
@@ -40,12 +41,17 @@ handler
 		});
 	
 	if (id) {
+		const newDoc = {
+			...req.body,
+			...(req.body.title) && {slug: slugify(req.body.title)}
+		};
 		await db.collection('posts').doc(id)
-		.set({
-			...req.body
-		}, { merge: true })
+		.set(newDoc, { merge: true })
 		.then(() => {
-			res.status(200).json({ ...req.body });
+			res.status(200).json(newDoc);
+		})
+		.catch((error) => {
+			res.status(400).json({ error: `something went wrong: ${error}` });
 		});
 	}
 })
