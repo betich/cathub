@@ -122,7 +122,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 	if (!data.hasOwnProperty("error")) {
 		return {
 			props: { ...data },
-			revalidate: 5
+			revalidate: 1 * 60
 		}
 	}
 	
