@@ -26,33 +26,33 @@ handler
 	const { post } = req.query;
 
 	const db = initDB();
-	const id = await db.collection('posts').where("slug", "==", post)
+	const docToUpdate = await db.collection('posts').where("slug", "==", post)
 		.get()
 		.then((snapshot) => {
 			if (snapshot.empty) {
 				res.status(404).json({ error: "post not found"});
 				return null;
 			}
-			return snapshot.docs[0].id;
+			return { slug: snapshot.docs[0].data().slug, id: snapshot.docs[0].id };
 		})
 		.catch((error) => {
 			res.status(400).json({ error: `something went wrong: ${error}` });
 			return null;
 		});
 	
-	if (id) {
+	if (docToUpdate) {
 		const newDoc = {
 			...req.body,
-			...(req.body.title) && {slug: slugify(req.body.title)}
+			slug: req.body.title ? slugify(req.body.title) : docToUpdate.slug
 		};
-		await db.collection('posts').doc(id)
-		.set(newDoc, { merge: true })
-		.then(() => {
-			res.status(200).json(newDoc);
-		})
-		.catch((error) => {
-			res.status(400).json({ error: `something went wrong: ${error}` });
-		});
+		await db.collection('posts').doc(docToUpdate.id)
+			.set(newDoc, { merge: true })
+			.then(() => {
+				res.status(200).json(newDoc);
+			})
+			.catch((error) => {
+				res.status(400).json({ error: `something went wrong: ${error}` });
+			});
 	}
 })
 .delete(async (req, res) => {
@@ -74,11 +74,14 @@ handler
 		});
 	
 	if (id) {
-		db.collection('posts').doc(id).delete().then(() => {
-			res.status(200).json({ message: "document successfully deleted" });
-		}).catch((error) => {
-			res.status(400).json({ error: `something went wrong: ${error}` });
-		});
+		db.collection('posts').doc(id)
+			.delete()
+			.then(() => {
+				res.status(200).json({ message: "document successfully deleted" });
+			})
+			.catch((error) => {
+				res.status(400).json({ error: `something went wrong: ${error}` });
+			});
 	}
 });
 

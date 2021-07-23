@@ -24,11 +24,10 @@ const Posts: FunctionComponent = () => {
 			}
 		})
 		.then(data => {
-			console.log('Success:', data);
 			setData(data);
 		})
 		.catch((error) => {
-			console.error('Error:', error);
+			console.error('error:', error);
 		})
 		.finally(() => {
 			setLoad(false);

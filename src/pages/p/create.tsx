@@ -55,11 +55,10 @@ const Create: FunctionComponent = () => {
 			}
 		})
 		.then(data => {
-			console.log('Success:', data);
 			router.push(`/p/${data.slug}`);
 		})
 		.catch((error) => {
-			console.error('Error:', error);
+			console.error('error:', error);
 		})
 		.finally(() => {
 			setLoad(false);
