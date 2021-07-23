@@ -6,8 +6,9 @@ import { PostData } from "@helpers/types";
 import { useRouter } from "next/router";
 import { GetStaticPaths, GetStaticProps } from "next";
 import initDB from "@helpers/db";
+import Link from "next/link";
 
-const ViewPost: FunctionComponent<PostData> = ({ title, content, tags }) => {
+const ViewPost: FunctionComponent<PostData> = ({ title, content, tags, slug }) => {
 	const router = useRouter();
 
 	if (router.isFallback) return <Loading />
@@ -15,7 +16,18 @@ const ViewPost: FunctionComponent<PostData> = ({ title, content, tags }) => {
 		<>
 			<Heading>{title}</Heading>
 			<LinkBack href="/p">back to pages</LinkBack>
-			<div>{JSON.stringify({ title, content, tags})}</div>
+			<div className="flex justify-center">
+				<Link href={`/p/${slug}/edit`}>
+					<a className="text-purple-700 hover:text-purple-900 text-center mr-5">edit</a>
+				</Link>
+				<Link href={`/p/${slug}/delete`}>
+					<a className="text-purple-700 hover:text-purple-900 text-center">delete</a>
+				</Link>
+			</div>
+			<div>
+				<p>{content}</p>
+				<p>{tags.join(", ")}</p>
+			</div>
 		</>
 	);
 };

@@ -45,8 +45,9 @@ handler
 			...req.body,
 			slug: req.body.title ? slugify(req.body.title) : docToUpdate.slug
 		};
+		console.log(docToUpdate.id);
 		await db.collection('posts').doc(docToUpdate.id)
-			.set(newDoc, { merge: true })
+			.update({ ...newDoc, updated: new Date().toISOString() })
 			.then(() => {
 				res.status(200).json(newDoc);
 			})

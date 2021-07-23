@@ -85,7 +85,7 @@ const Edit: FunctionComponent<PostData> = ({ title, content, tags, slug }) => {
 	return (
 		<>
 			<Heading>Edit {title}</Heading>
-			<LinkBack href={`/p/${slug}`}>back to {title}</LinkBack>
+			<LinkBack href={`/p/${slug}`}>back to page</LinkBack>
 			{FormElement()}
 		</>
 	);
