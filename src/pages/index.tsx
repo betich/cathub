@@ -1,14 +1,27 @@
+import { FunctionComponent, useEffect } from "react";
+import { LinkButton, LinkList } from "@components/layout/Landing";
+import { Heading } from "@components/elements/General";
+import { useAuth } from "@modules/auth";
+import { useRouter } from "next/router";
+import { HeartLoading } from "@components/elements/Loading";
 import Head from "next/head";
-import { FunctionComponent } from "react";
-import { LinkButton, LinkList } from "@components/Landing";
-import { Heading } from "@components/General";
 
 const Home: FunctionComponent = () => {
-	return (
+	const { user, loading } = useAuth();
+	const router = useRouter();
+
+	useEffect(() => {
+		if (!user) {
+			router.push('/login');
+		}
+	}, [user])
+
+	if (loading) return <HeartLoading />;
+
+	else return (
 		<>
 			<Head>
-				<title>CatHub</title>
-				<link rel="icon" href="/favicon.ico" />
+				<title>Cathub</title>
 			</Head>
 			<Heading>CatHub</Heading>
 			<LinkList>

@@ -1,11 +1,11 @@
 import { FunctionComponent, useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/router";
-import { Heading, LinkBack } from "@components/General";
-import { PostForm, PostTitle, PostContent, PostTags, PostSubmit } from "@components/Form";
-import { ThreedotLoading as Loading } from "@components/Loading";
+import { Heading, LinkBack } from "@components/elements/General";
+import { PostForm, PostTitle, PostContent, PostTags, PostSubmit } from "@components/elements/Form";
+import { ThreedotLoading as Loading } from "@components/elements/Loading";
 import { GetStaticPaths, GetStaticProps } from "next";
-import initDB from "@helpers/db";
-import { PostData } from "@helpers/types";
+import { initDB } from "@helpers/firebase";
+import { PostData } from "@types";
 
 const Edit: FunctionComponent<PostData> = ({ title, content, tags, slug }) => {
 	const router = useRouter();

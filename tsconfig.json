@@ -6,6 +6,8 @@
         "@components/*": ["src/components/*"],
         "@pages/*": ["src/pages/*"],
         "@helpers/*": ["src/helpers/*"],
+        "@types": ["src/@types/index.ts"],
+        "@modules/*": ["src/modules/*"]
       },
       "lib": [
         "es2020", "dom"

@@ -1,4 +1,4 @@
-import { ThreedotLoading as Loading } from "@components/Loading";
+import { ThreedotLoading as Loading } from "@components/elements/Loading";
 import { useRouter } from "next/router";
 import { FunctionComponent, useEffect, useState } from "react";
 

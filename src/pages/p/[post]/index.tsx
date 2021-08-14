@@ -1,11 +1,11 @@
 import { FunctionComponent, useState, useEffect } from "react";
-import { Heading } from "@components/General";
-import { ThreedotLoading as Loading } from "@components/Loading";
-import { LinkBack } from "@components/General";
-import { PostData } from "@helpers/types";
+import { Heading } from "@components/elements/General";
+import { ThreedotLoading as Loading } from "@components/elements/Loading";
+import { LinkBack } from "@components/elements/General";
+import { PostData } from "@types";
 import { useRouter } from "next/router";
 import { GetStaticPaths, GetStaticProps } from "next";
-import initDB from "@helpers/db";
+import { initDB } from "@helpers/firebase";
 import Link from "next/link";
 
 const ViewPost: FunctionComponent<PostData> = ({ title, content, tags, slug }) => {

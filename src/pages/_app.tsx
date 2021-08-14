@@ -2,8 +2,9 @@
 import "@styles/styles.scss";
 import type { AppProps } from "next/app";
 import { useState, useEffect } from "react";
-import { HeartLoading as Loading } from "@components/Loading";
+import { HeartLoading as Loading } from "@components/elements/Loading";
 import { useRouter } from "next/router";
+import { AuthProvider } from "@modules/auth";
 
 function MyApp({ Component, pageProps }: AppProps) {
 	const router = useRouter();
@@ -29,7 +30,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 		};
 	}, []);
 
-	return loading ? <Loading /> : <Component {...pageProps} />;
+	return loading ?
+		<Loading />
+	:
+		<AuthProvider>
+			<Component {...pageProps} />;
+		</AuthProvider>
 }
 
 export default MyApp;

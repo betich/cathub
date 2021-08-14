@@ -1,9 +1,9 @@
 import { FunctionComponent, useState, useEffect } from "react";
-import { Heading } from "@components/General";
-import { ThreedotLoading as Loading } from "@components/Loading";
-import { LinkBack } from "@components/General";
-import { LinkButton, LinkList } from "@components/Landing";
-import { PostData } from "@helpers/types";
+import { Heading } from "@components/elements/General";
+import { ThreedotLoading as Loading } from "@components/elements/Loading";
+import { LinkBack } from "@components/elements/General";
+import { LinkButton, LinkList } from "@components/layout/Landing";
+import { PostData } from "@types";
 
 const Posts: FunctionComponent = () => {
 	const [loading, setLoad] = useState(true);
