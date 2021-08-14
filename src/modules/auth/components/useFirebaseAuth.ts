@@ -23,17 +23,16 @@ export default function useFirebaseAuth() {
 			const user = formatUser(newRawUser);
 			await createUser(user.uid, user);
 			setRawUser(newRawUser);
-		  
+
 			// cookie.set(AUTH_COOKIE, true,
 			// 	expires:
 			// })
 	
 			setLoading(false);
 		} else {
-			console.log("Hi")
 			setRawUser(null);
 			// cookie.remove(AUTH_COOKIE)
-	
+			
 			setLoading(false);
 		}
 	}
@@ -65,7 +64,13 @@ export default function useFirebaseAuth() {
 	*/
 
 	useEffect(() => {
-		if (rawUser) {
+        const unsubscribe = firebase.auth().onIdTokenChanged(handleUser);
+
+        return () => unsubscribe(); // cleanup
+    }, [])
+
+	useEffect(() => {
+		if (!loading && rawUser) {
 			updateUserData();
 		}
 	}, [rawUser]);
@@ -102,21 +107,21 @@ export default function useFirebaseAuth() {
 
 	const signinWithGoogle = async (redirect: string) => {
 		setLoading(true);
-
 		
 		const response = await firebase
 			.auth()
 			.signInWithPopup(new firebase.auth.GoogleAuthProvider());
 		
-		await handleUser(response.user);
+		// await handleUser(response.user);
 
-		// if (redirect) {
-		// 	Router.push(redirect);
-		// }
+		if (redirect) {
+			Router.push(redirect);
+		}
 	};
 
-	const signout = async () => {
-		Router.push("/");
+	const signout = async (redirect?: string) => {
+		console.log('hi')
+		Router.push(redirect ?? '/');
 
 		await firebase.auth().signOut();
 		// return await handleUser(null)
@@ -130,4 +135,4 @@ export default function useFirebaseAuth() {
 		createUserWithEmail,
 		signout,
 	};
-}
+};

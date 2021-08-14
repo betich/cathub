@@ -34,7 +34,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 		<Loading />
 	:
 		<AuthProvider>
-			<Component {...pageProps} />;
+			<Component {...pageProps} />
 		</AuthProvider>
 }
 

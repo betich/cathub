@@ -10,5 +10,5 @@ export type UserContext = {
 	signinWithGoogle?: (redirect: string) => Promise<void>,
 	signinWithEmail?: (email: string, password: string) => Promise<void>,
 	createUserWithEmail?: (email: string, password: string) => Promise<void>,
-	signout?: () => void
+	signout?: (redirect?: string) => void
 }

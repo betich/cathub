@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { LinkButton, LinkList } from "@components/layout/Landing";
 import { Heading } from "@components/elements/General";
 import { useAuth } from "@modules/auth";
@@ -11,10 +11,10 @@ const Home: FunctionComponent = () => {
 	const router = useRouter();
 
 	useEffect(() => {
-		if (!user) {
+		if (!user && !loading) {
 			router.push('/login');
 		}
-	}, [user])
+	}, [user]);
 
 	if (loading) return <HeartLoading />;
 
@@ -25,6 +25,7 @@ const Home: FunctionComponent = () => {
 			</Head>
 			<Heading>CatHub</Heading>
 			<LinkList>
+				<LinkButton href="/logout">Logout</LinkButton>
 				<LinkButton href="/p/create">Create a Post</LinkButton>
 				<LinkButton href="/p">View Posts</LinkButton>
 				<LinkButton href="/">Cat Battles!</LinkButton>
