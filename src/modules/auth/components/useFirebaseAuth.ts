@@ -36,33 +36,6 @@ export default function useFirebaseAuth() {
 			setLoading(false);
 		}
 	}
-
-	/*
-	useEffect(() => {
-		const unsubscribe = firebase.auth().onAuthStateChanged((newRawUser: firebase.User | null) => {
-			if (newRawUser) {
-				// User is signed in.
-				const newUser = formatUser(newRawUser);
-				createUser(newUser.uid, newUser);
-				setRawUser(rawUser);
-
-				// cookie.set(AUTH_COOKIE, true, {
-				// 	expires: 1
-				// })
-
-				setLoading(false);
-			} else {
-				setRawUser(null);
-				// cookie.remove(AUTH_COOKIE)
-
-				setLoading(false);
-			}
-		});
-
-		return () => unsubscribe(); // cleanup
-	}, [])
-	*/
-
 	
 	useEffect(() => {
         // const unsubscribe = firebase.auth().onIdTokenChanged(handleUser);
