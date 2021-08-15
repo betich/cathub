@@ -1,13 +1,23 @@
-import { FunctionComponent, useState, FormEvent } from "react";
+import { FunctionComponent, useState, FormEvent, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Heading, LinkBack } from "@components/elements/General";
 import { PostForm, PostTitle, PostContent, PostTags, PostSubmit } from "@components/elements/Form";
 import { ThreedotLoading as Loading } from "@components/elements/Loading";
+import { useAuth } from "@modules/auth";
 
 const TAGS = ["food", "inspiration", "entertainment", "nature"];
 
 const Create: FunctionComponent = () => {
 	const router = useRouter();
+	const { user, loading: authLoading } = useAuth();
+
+	useEffect(() => {
+		if (authLoading) return;
+
+		if (!user && !authLoading) {
+			router.push("/login");
+		}
+	}, [user, authLoading]);
 
 	const [title, setTitle] = useState("");
 	const [content, setContent] = useState("");
@@ -17,65 +27,66 @@ const Create: FunctionComponent = () => {
 	const handleTitle = (e: FormEvent) => {
 		const elem = e.currentTarget as HTMLInputElement;
 		setTitle(elem.value);
-	}
+	};
 
 	const handleContent = (e: FormEvent) => {
 		const elem = e.currentTarget as HTMLInputElement;
 		setContent(elem.value);
-	}
+	};
 
 	const handleTagChange = (newTags: string[]) => {
 		setTags(newTags);
-	}
+	};
 
 	const handleSubmit = (e: FormEvent) => {
 		setLoad(true);
 		e.preventDefault();
-		const reqData = {title, content, tags};
+		const reqData = { title, content, tags, uid: user?.uid };
 
-		fetch('/api/posts', {
-			method: 'POST',
+		fetch("/api/posts", {
+			method: "POST",
 			headers: {
-				'Content-Type': 'application/json',
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(reqData)
+			body: JSON.stringify(reqData),
 		})
-		.then(response => {
-			switch (response.status) {
-				case 200:
-					return response.json();
-				case 400:
-					throw Error("unknown error");
-				case 404:
-					throw Error("unknown resource");
-				case 409:
-					throw Error("name conflict");
-				default:
-					throw Error("unknown response");
-			}
-		})
-		.then(data => {
-			router.push(`/p/${data.slug}`);
-		})
-		.catch((error) => {
-			console.error('error:', error);
-		})
-		.finally(() => {
-			setLoad(false);
-		});
-	}
+			.then((response) => {
+				switch (response.status) {
+					case 200:
+						return response.json();
+					case 400:
+						throw Error("unknown error");
+					case 404:
+						throw Error("unknown resource");
+					case 409:
+						throw Error("name conflict");
+					default:
+						throw Error("unknown response");
+				}
+			})
+			.then((data) => {
+				router.push(`/p/${data.slug}`);
+			})
+			.catch((error) => {
+				console.error("error:", error);
+			})
+			.finally(() => {
+				setLoad(false);
+			});
+	};
 
 	const FormElement = () => {
-		if (loading) return <Loading />;
-		else return (
-			<PostForm onsubmit={handleSubmit}>
-				<PostTitle value={title} required onchange={handleTitle} placeholder="Post Title" />
-				<PostContent value={content} required onchange={handleContent} placeholder="Write something..." />
-				<PostTags tagchange={handleTagChange} tags={tags} />
-				<PostSubmit />
-			</PostForm>
-		);
-	}
+		if (loading || authLoading) return <Loading />;
+		else
+			return (
+				<PostForm onsubmit={handleSubmit}>
+					<PostTitle value={title} required onchange={handleTitle} placeholder="Post Title" />
+					<PostContent value={content} required onchange={handleContent} placeholder="Write something..." />
+					<PostTags tagchange={handleTagChange} tags={tags} />
+					<PostSubmit />
+				</PostForm>
+			);
+	};
 
 	return (
 		<>
