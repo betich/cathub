@@ -8,12 +8,16 @@ const Logout: FunctionComponent = () => {
 	const router = useRouter();
 
 	useEffect(() => {
+		if (loading) return;
+
 		if (user && !loading) {
+			// logged in and not loading
 			if (signout) signout('/');
 		} else {
+			// not logged in
 			router.push('/');
 		}
-	}, [user]);
+	}, [user, loading]);
 
 	return (
 		<>

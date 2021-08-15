@@ -10,11 +10,14 @@ const Home: FunctionComponent = () => {
 	const { user, loading } = useAuth();
 	const router = useRouter();
 
+	/*
 	useEffect(() => {
 		if (!user && !loading) {
+			console.log('to login', user)
 			router.push('/login');
 		}
-	}, [user]);
+	}, [user, loading]);
+	*/
 
 	if (loading) return <HeartLoading />;
 
@@ -24,8 +27,9 @@ const Home: FunctionComponent = () => {
 				<title>Cathub</title>
 			</Head>
 			<Heading>CatHub</Heading>
+			{user?.name /* logged in */ && <p className="text-xl text-center text-purple-700 mt-5">Hi, {user.name}!</p>}
 			<LinkList>
-				<LinkButton href="/logout">Logout</LinkButton>
+				{user?.name /* logged in */  ? <LinkButton href="/logout">Logout</LinkButton> : <LinkButton href="/login">Login</LinkButton>}
 				<LinkButton href="/p/create">Create a Post</LinkButton>
 				<LinkButton href="/p">View Posts</LinkButton>
 				<LinkButton href="/">Cat Battles!</LinkButton>

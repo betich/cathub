@@ -20,8 +20,8 @@ export default function useFirebaseAuth() {
 
 	const handleUser = async (newRawUser: firebase.User | null) => {
 		if (newRawUser) {
-			const user = formatUser(newRawUser);
-			await createUser(user.uid, user);
+			const formattedUser = formatUser(newRawUser);
+			await createUser(formattedUser.uid, formattedUser);
 			setRawUser(newRawUser);
 
 			// cookie.set(AUTH_COOKIE, true,
@@ -63,25 +63,31 @@ export default function useFirebaseAuth() {
 	}, [])
 	*/
 
+	
 	useEffect(() => {
-        const unsubscribe = firebase.auth().onIdTokenChanged(handleUser);
+        // const unsubscribe = firebase.auth().onIdTokenChanged(handleUser);
+		const unsubscribe = firebase.auth().onAuthStateChanged(handleUser);
 
         return () => unsubscribe(); // cleanup
     }, [])
+	
 
 	useEffect(() => {
-		if (!loading && rawUser) {
+		if (rawUser) {
 			updateUserData();
 		}
 	}, [rawUser]);
 
 	const updateUserData = async () => {
 		if (!rawUser) return;
+		setLoading(true);
 		const data = await getCurrentUserData(rawUser.uid);
 		if (data) {
 			setUser(data as UserData);
+			setLoading(false);
 		} else {
 			setUser(null);
+			setLoading(false);
 		}
 	};
 
@@ -112,7 +118,7 @@ export default function useFirebaseAuth() {
 			.auth()
 			.signInWithPopup(new firebase.auth.GoogleAuthProvider());
 		
-		// await handleUser(response.user);
+		await handleUser(response.user);
 
 		if (redirect) {
 			Router.push(redirect);
@@ -120,11 +126,11 @@ export default function useFirebaseAuth() {
 	};
 
 	const signout = async (redirect?: string) => {
-		console.log('hi')
-		Router.push(redirect ?? '/');
-
 		await firebase.auth().signOut();
-		// return await handleUser(null)
+
+		await handleUser(null)
+		
+		Router.push(redirect ?? '/');
 	};
 
 	return {

@@ -8,10 +8,12 @@ const Login: FunctionComponent = () => {
 	const router = useRouter();
 
 	useEffect(() => {
+		console.log('login update', user, loading)
 		if (user && !loading) {
+			console.log('to index', user)
 			router.push('/');
 		}
-	}, [user]);
+	}, [user, loading]);
 
 	return (
 		<>
