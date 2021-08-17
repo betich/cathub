@@ -1,9 +1,10 @@
-import { FunctionComponent, useState, FormEvent, useEffect } from "react";
+import { FunctionComponent, useState, FormEvent, useEffect, useReducer } from "react";
 import { useRouter } from "next/router";
 import { Heading, LinkBack } from "@components/elements/General";
 import { PostForm, PostTitle, PostContent, PostTags, PostSubmit } from "@components/elements/Form";
 import { ThreedotLoading as Loading } from "@components/elements/Loading";
 import { useAuth } from "@modules/auth";
+import { postReducer } from "@modules/post";
 
 const TAGS = ["food", "inspiration", "entertainment", "nature"];
 
@@ -19,29 +20,32 @@ const Create: FunctionComponent = () => {
 		}
 	}, [user, authLoading]);
 
-	const [title, setTitle] = useState("");
-	const [content, setContent] = useState("");
-	const [tags, setTags] = useState<string[]>([...TAGS]);
+	const [state, dispatch] = useReducer(postReducer, {
+		title: "",
+		content: "",
+		tags: [...TAGS],
+	});
+
 	const [loading, setLoad] = useState(false);
 
 	const handleTitle = (e: FormEvent) => {
 		const elem = e.currentTarget as HTMLInputElement;
-		setTitle(elem.value);
+		dispatch({ type: "title", title: elem.value });
 	};
 
 	const handleContent = (e: FormEvent) => {
 		const elem = e.currentTarget as HTMLInputElement;
-		setContent(elem.value);
+		dispatch({ type: "content", content: elem.value });
 	};
 
 	const handleTagChange = (newTags: string[]) => {
-		setTags(newTags);
+		dispatch({ type: "tags", tags: newTags });
 	};
 
 	const handleSubmit = (e: FormEvent) => {
 		setLoad(true);
 		e.preventDefault();
-		const reqData = { title, content, tags, uid: user?.uid };
+		const reqData = { ...state, uid: user?.uid };
 
 		fetch("/api/posts", {
 			method: "POST",
@@ -80,9 +84,14 @@ const Create: FunctionComponent = () => {
 		else
 			return (
 				<PostForm onsubmit={handleSubmit}>
-					<PostTitle value={title} required onchange={handleTitle} placeholder="Post Title" />
-					<PostContent value={content} required onchange={handleContent} placeholder="Write something..." />
-					<PostTags tagchange={handleTagChange} tags={tags} />
+					<PostTitle value={state.title} required onchange={handleTitle} placeholder="Post Title" />
+					<PostContent
+						value={state.content}
+						required
+						onchange={handleContent}
+						placeholder="Write something..."
+					/>
+					<PostTags tagchange={handleTagChange} tags={state.tags} />
 					<PostSubmit />
 				</PostForm>
 			);
