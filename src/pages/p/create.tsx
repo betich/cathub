@@ -10,7 +10,7 @@ const TAGS = ["food", "inspiration", "entertainment", "nature"];
 
 const Create: FunctionComponent = () => {
 	const router = useRouter();
-	const { user, loading: authLoading } = useAuth();
+	const { user, loading: authLoading, getToken } = useAuth();
 
 	useEffect(() => {
 		if (authLoading) return;
@@ -42,15 +42,19 @@ const Create: FunctionComponent = () => {
 		dispatch({ type: "tags", tags: newTags });
 	};
 
-	const handleSubmit = (e: FormEvent) => {
+	const handleSubmit = async (e: FormEvent) => {
 		setLoad(true);
 		e.preventDefault();
-		const reqData = { ...state, uid: user?.uid };
+		const reqData = { ...state };
 
-		fetch("/api/posts", {
+		const token = getToken ? await getToken() : null;
+		if (!token) return; // error
+
+		await fetch("/api/posts", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
+				token: token,
 			},
 			body: JSON.stringify(reqData),
 		})

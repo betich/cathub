@@ -1,15 +1,17 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
-import { initDB } from "@helpers/firebase";
+import { firestore } from "@helpers/firebase";
 import slugify from "slugify";
+import { authorizedMiddleware } from "@helpers/middleware";
 
 const handler = nc<NextApiRequest, NextApiResponse>();
 
 handler
 	.get(async (req, res) => {
+		// get info about post
 		const { post } = req.query;
 
-		const db = initDB();
+		const db = firestore;
 		await db
 			.collection("posts")
 			.where("slug", "==", post)
@@ -24,10 +26,11 @@ handler
 				return null;
 			});
 	})
-	.put(async (req, res) => {
+	.put(authorizedMiddleware, async (req, res) => {
+		// update a post
 		const { post } = req.query;
 
-		const db = initDB();
+		const db = firestore;
 
 		db.runTransaction((transaction) => {
 			const postRef = db.collection("posts").where("slug", "==", post);
@@ -59,10 +62,11 @@ handler
 				});
 		});
 	})
-	.delete(async (req, res) => {
+	.delete(authorizedMiddleware, async (req, res) => {
+		// delete a post
 		const { post } = req.query;
 
-		const db = initDB();
+		const db = firestore;
 
 		db.runTransaction((transaction) => {
 			const postRef = db.collection("posts").where("slug", "==", post);

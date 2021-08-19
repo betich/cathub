@@ -4,13 +4,24 @@ import { Heading, LinkBack } from "@components/elements/General";
 import { PostForm, PostTitle, PostContent, PostTags, PostSubmit } from "@components/elements/Form";
 import { ThreedotLoading as Loading } from "@components/elements/Loading";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { initDB } from "@helpers/firebase";
+import { firestore } from "@helpers/firebase";
 import { PostData } from "@types";
 import { postReducer } from "@modules/post";
+import { useAuth } from "@modules/auth";
 
 const Edit: FunctionComponent<PostData> = ({ title, content, tags, slug }) => {
 	const router = useRouter();
 	const { post } = router.query;
+
+	const { user, loading: authLoading, getToken } = useAuth();
+
+	useEffect(() => {
+		if (authLoading) return;
+
+		if (!user && !authLoading) {
+			router.push("/login");
+		}
+	}, [user, authLoading]);
 
 	const [state, dispatch] = useReducer(postReducer, {
 		title: title,
@@ -33,7 +44,7 @@ const Edit: FunctionComponent<PostData> = ({ title, content, tags, slug }) => {
 		dispatch({ type: "tags", tags: newTags });
 	};
 
-	const handleSubmit = (e: FormEvent) => {
+	const handleSubmit = async (e: FormEvent) => {
 		setLoad(true);
 		e.preventDefault();
 		const reqData = {
@@ -42,10 +53,14 @@ const Edit: FunctionComponent<PostData> = ({ title, content, tags, slug }) => {
 			tags: state.tags,
 		};
 
+		const token = getToken ? await getToken() : null;
+		if (!token) return; // error
+
 		fetch(`/api/posts/${post}`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
+				token: token,
 			},
 			body: JSON.stringify(reqData),
 		})
@@ -101,7 +116,7 @@ const Edit: FunctionComponent<PostData> = ({ title, content, tags, slug }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-	const db = initDB();
+	const db = firestore;
 	const data = await db
 		.collection("posts")
 		.get()
@@ -120,7 +135,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-	const db = initDB();
+	const db = firestore;
 	const data = await db
 		.collection("posts")
 		.where("slug", "==", params?.post?.toString() ?? "")

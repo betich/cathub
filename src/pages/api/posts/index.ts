@@ -1,14 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
-import { initDB } from "@helpers/firebase";
+import { firestore } from "@helpers/firebase";
 import slugify from "slugify";
+import { authenticatedMiddleware } from "@helpers/middleware";
 
 const handler = nc<NextApiRequest, NextApiResponse>();
 
 handler
 	.get(async (req, res) => {
 		// get posts
-		const db = initDB();
+		const db = firestore;
 		await db
 			.collection("posts")
 			.get()
@@ -22,13 +23,13 @@ handler
 				});
 			});
 	})
-	.post(async (req, res) => {
-		// create post
-		const { title, uid } = req.body;
-		if (!uid) return res.status(401).json({ error: `user must be authenticated` });
+	.post(authenticatedMiddleware, async (req, res) => {
+		// create a post
+		// has to be logged in & curr uid has to match the new
+		const { title } = req.body;
 		const slug = slugify(title, { lower: true });
 
-		const db = initDB();
+		const db = firestore;
 
 		db.runTransaction((transaction) => {
 			const postsRef = db.collection("posts");
@@ -48,6 +49,7 @@ handler
 							...req.body,
 							slug,
 							created: timestamp,
+							uid: req.uid,
 						};
 
 						const newPostRef = db.collection("posts").doc();
