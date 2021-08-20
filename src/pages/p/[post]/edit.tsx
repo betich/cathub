@@ -4,7 +4,7 @@ import { Heading, LinkBack } from "@components/elements/General";
 import { PostForm, PostTitle, PostContent, PostTags, PostSubmit } from "@components/elements/Form";
 import { ThreedotLoading as Loading } from "@components/elements/Loading";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { firestore } from "@helpers/firebase";
+import { firestore } from "@helpers/firebase/admin";
 import { PostData } from "@types";
 import { postReducer } from "@modules/post";
 import { useAuth } from "@modules/auth";

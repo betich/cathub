@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
-import { firestore } from "@helpers/firebase";
+import { firestore } from "@helpers/firebase/admin";
 import slugify from "slugify";
 import { authorizedMiddleware } from "@helpers/middleware";
 

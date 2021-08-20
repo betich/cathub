@@ -1,4 +1,4 @@
-import { auth } from "@helpers/firebase";
+import { auth } from "@helpers/firebase/admin";
 
 export const checkAuthenticated = async (token: string): Promise<[boolean, string | null]> => {
 	// checks if user is authenticated

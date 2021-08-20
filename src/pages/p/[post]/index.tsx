@@ -5,7 +5,7 @@ import { LinkBack } from "@components/elements/General";
 import { PostData } from "@types";
 import { useRouter } from "next/router";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { firestore } from "@helpers/firebase";
+import { firestore } from "@helpers/firebase/admin";
 import Link from "next/link";
 
 const ViewPost: FunctionComponent<PostData> = ({ title, content, tags, slug }) => {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { client as firebase } from "@helpers/firebase";
+import firebase from "@helpers/firebase/client";
 import { UserData } from "@types";
 import { getCurrentUserData, createUser } from "@modules/auth/client";
 import Router from "next/router";

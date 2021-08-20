@@ -1,4 +1,4 @@
-import { client as firebase } from "@helpers/firebase";
+import firebase from "@helpers/firebase/client";
 
 const db = firebase.firestore();
 
